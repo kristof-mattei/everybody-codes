@@ -3,7 +3,7 @@
 
 [remote.github]
 owner = "kristof-mattei"
-repo = "advent-of-code-2025"
+repo = "everybody-codes-2025"
 
 [changelog]
 # A Tera template to be rendered as the changelog's header.
@@ -62,7 +62,7 @@ render_always = true
 # An array of regex based postprocessors to modify the changelog.
 postprocessors = [
     # Replace the placeholder `<REPO>` with a URL.
-    { pattern = '<REPO>', replace = "https://github.com/kristof-mattei/advent-of-code-2025" }, # replace repository URL
+    { pattern = '<REPO>', replace = "https://github.com/kristof-mattei/everybody-codes-2025" }, # replace repository URL
 ]
 # render body even when there are no releases to process
 # render_always = true
@@ -126,6 +126,8 @@ sort_commits = "oldest"
 # Process submodules commits
 recurse_submodules = false
 
+tag_pattern = "v[0-9].*"
+
 [bump]
 breaking_always_bump_major = false
-initial_tag = "0.0.1"
+initial_tag = "v0.0.1"

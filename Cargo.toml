@@ -1,26 +1,25 @@
-[package]
-name = "advent-of-code-2025"
+[workspace]
+resolver = "3"
+members = ["crates/*"]
+
+[workspace.package]
 version = "0.0.0-development"
 edition = "2024"
-rust-version = "1.92.0"
+rust-version = "1.93.1"
 authors = ["Kristof Mattei"]
 description = "Advent of Code 2025"
 license = "MIT"
-categories = ["playground"]
-keywords = ["playground"]
-repository = "https://github.com/kristof-mattei/advent-of-code-2025"
-include = ["src/**", "/LICENSE", "/LICENSE-*"]
+categories = ["starter", "seed"]
+keywords = ["integrity", "seed", "starter", "docker", "release"]
+repository = "https://github.com/kristof-mattei/everybody-codes"
+include = ["crates/**", "/LICENSE", "/LICENSE-*"]
 
-[dependencies]
-hashbrown = { version = "0.16.1", default-features = false, features = [
-    "default-hasher",
-    "equivalent",
-    "inline-more",
-] }
-z3 = "0.19.6"
-#regex = { version = "1.11.3", features = ["perf", "unicode-perl", "std"] }
+[workspace.dependencies]
 
-[lints.clippy]
+[workspace.metadata.spellcheck]
+config = "spellcheck.toml"
+
+[workspace.lints.clippy]
 # don't stop from compiling / running
 all = "warn"
 cargo = "warn"
@@ -62,6 +61,7 @@ deref_by_slicing = { level = "deny", priority = 127 }
 # No, we already have `non_ascii_idents` which is even bette
 # disallowed_script_idents = { level = "deny", priority = 127 }
 doc_include_without_cfg = { level = "deny", priority = 127 }
+doc_paragraphs_missing_punctuation = { level = "deny", priority = 127 }
 else_if_without_else = { level = "deny", priority = 127 }
 empty_drop = { level = "deny", priority = 127 }
 # Lib only
@@ -244,6 +244,6 @@ redundant_else = { level = "allow", priority = 127 }
 # so we don't inline anything
 uninlined_format_args = { level = "allow", priority = 127 }
 
-[lints.rust]
+[workspace.lints.rust]
 let_underscore_drop = { level = "deny", priority = 127 }
 non_ascii_idents = { level = "deny", priority = 127 }

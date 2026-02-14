@@ -1,0 +1,31 @@
+[package]
+name = "everybody-codes-2025"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+authors.workspace = true
+description.workspace = true
+license.workspace = true
+categories.workspace = true
+keywords.workspace = true
+repository.workspace = true
+include.workspace = true
+
+[features]
+default = []
+
+[dependencies]
+color-eyre = "0.6.5"
+hashbrown = { version = "0.16.1", default-features = false, features = [
+    "default-hasher",
+    "equivalent",
+    "inline-more",
+] }
+pretty_assertions = "1.4.1"
+z3 = "0.19.6"
+#regex = { version = "1.11.3", features = ["perf", "unicode-perl", "std"] }
+
+[dev-dependencies]
+
+[lints]
+workspace = true

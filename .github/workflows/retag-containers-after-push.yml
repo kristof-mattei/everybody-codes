@@ -46,7 +46,7 @@ jobs:
         shell: bash
         run: |
           has_container="${{ vars.HAS_CONTAINER }}"
-          echo "has_container=${has_container:-false}" >> ${GITHUB_OUTPUT}
+          echo "has_container=${has_container:-false}" >> "${GITHUB_OUTPUT}"
 
   retag-containers:
     name: Retag the containers
@@ -57,7 +57,7 @@ jobs:
       fromJSON(needs.repo-has-container.outputs.has_container) == true
     steps:
       - name: Checkout
-        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           show-progress: false
           fetch-depth: 2
@@ -126,7 +126,7 @@ jobs:
           echo "${temp_path}" >> ${GITHUB_PATH}
 
       - name: Set up Docker
-        uses: docker/setup-docker-action@e61617a16c407a86262fb923c35a616ddbe070b3 # v4.6.0
+        uses: docker/setup-docker-action@e43656e248c0bd0647d3f5c195d116aacf6fcaf4 # v4.7.0
         with:
           daemon-config: |
             {
@@ -136,10 +136,10 @@ jobs:
             }
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@e468171a9de216ec08956ac3ada2f0791b6bd435 # v3.11.1
+        uses: docker/setup-buildx-action@8d2750c68a42422c14e847fe6c8ac0403b4cbd6f # v3.12.0
 
       - name: Log into registry ${{ env.REGISTRY }}
-        uses: docker/login-action@5e57cd118135c172c3672efd75eb46360885c0ef # v3.6.0
+        uses: docker/login-action@c94ce9fb468520275223c153574b00df6fe4bcc9 # v3.7.0
         with:
           password: ${{ secrets.GITHUB_TOKEN }}
           registry: ${{ env.REGISTRY }}
