@@ -1,6 +1,6 @@
-use everybody_codes_2025::shared::{PartSolution, Parts};
+use shared::{PartSolution, Parts};
 
-everybody_codes_2025::solution!();
+shared::solution!();
 
 impl Parts for Solution {
     fn part_1(&self, _input: &str) -> PartSolution {
@@ -18,7 +18,7 @@ impl Parts for Solution {
 
 #[cfg(test)]
 mod test {
-    use everybody_codes_2025::{test_example, test_solution};
+    use shared::{test_example, test_solution};
 
     #[test]
     fn outcome_1() {

@@ -1,8 +1,8 @@
 use std::ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign};
 
-use everybody_codes_2025::shared::{PartSolution, Parts};
+use shared::{PartSolution, Parts};
 
-everybody_codes_2025::solution!("[155819,797337]", 622, 60242);
+shared::solution!("[155819,797337]", 622, 60242);
 
 fn parse_input(input: &str) -> Complex {
     let line = input.lines().next().unwrap();
@@ -136,7 +136,7 @@ impl Parts for Solution {
 
 #[cfg(test)]
 mod test {
-    use everybody_codes_2025::{test_example, test_solution};
+    use shared::{test_example, test_solution};
 
     #[test]
     fn outcome_1() {
