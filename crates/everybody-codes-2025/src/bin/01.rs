@@ -1,143 +1,167 @@
 use everybody_codes_2025::shared::{PartSolution, Parts};
 
-everybody_codes_2025::solution!(1031, 5831);
+everybody_codes_2025::solution!("Dalkryth", "Mornfeth", "Tharnlorath");
 
 #[derive(Debug)]
 enum Instruction {
-    Left(u32),
-    Right(u32),
+    Left(usize),
+    Right(usize),
 }
 
-fn parse_line(line: &str) -> Instruction {
-    let chars = line.chars().collect::<Vec<_>>();
-    let direction = chars[0];
-    let ticks = chars[1..].iter().collect::<String>().parse().unwrap();
+fn parse_instructions(line: &str) -> Vec<Instruction> {
+    let raw_instructions = line.split(',');
 
-    let instruction = match direction {
-        'L' => Instruction::Left(ticks),
-        'R' => Instruction::Right(ticks),
-        _ => panic!("Invalid input"),
-    };
+    let mut instructions = Vec::new();
 
-    instruction
+    for raw_instruction in raw_instructions {
+        let raw_instruction = raw_instruction.chars().collect::<Vec<_>>();
+        let direction = raw_instruction[0];
+        let ticks = raw_instruction[1..]
+            .iter()
+            .collect::<String>()
+            .parse()
+            .unwrap();
+
+        let instruction = match direction {
+            'L' => Instruction::Left(ticks),
+            'R' => Instruction::Right(ticks),
+            _ => panic!("Invalid input"),
+        };
+
+        instructions.push(instruction);
+    }
+
+    instructions
 }
 
-fn parse_input(input: &str) -> Vec<Instruction> {
-    let parsed: Vec<_> = input.lines().map(parse_line).collect();
+fn parse_input(input: &str) -> (Vec<String>, Vec<Instruction>) {
+    let mut lines = input.lines();
 
-    parsed
+    let names = lines
+        .next()
+        .unwrap()
+        .split(',')
+        .map(str::to_owned)
+        .collect::<Vec<_>>();
+
+    let _: &str = lines.next().unwrap();
+
+    let parsed: Vec<_> = parse_instructions(lines.next().unwrap());
+
+    (names, parsed)
 }
 
 impl Parts for Solution {
     fn part_1(&self, input: &str) -> PartSolution {
-        let parsed = parse_input(input);
+        let (names, parsed) = parse_input(input);
 
-        let mut result = 0;
-        let mut position: u32 = 50;
+        let mut result: usize = 0;
 
         for instruction in parsed {
             match instruction {
                 Instruction::Left(ticks) => {
-                    let remainder = ticks % 100;
-
-                    if remainder > position {
-                        position = 100 - (remainder - position);
-                    } else {
-                        position -= remainder;
-                    }
+                    result = result.saturating_sub(ticks);
                 },
                 Instruction::Right(ticks) => {
-                    position += ticks;
+                    result += ticks;
 
-                    position %= 100;
+                    if result >= names.len() {
+                        result = names.len() - 1;
+                    }
                 },
-            }
-
-            if position == 0 {
-                result += 1;
             }
         }
 
-        PartSolution::U32(result)
+        PartSolution::from(&*names[result])
     }
 
     fn part_2(&self, input: &str) -> PartSolution {
-        let parsed = parse_input(input);
+        let (names, parsed) = parse_input(input);
 
-        let mut result = 0;
-        let mut position: u32 = 50;
+        let mut result: usize = 0;
 
         for instruction in parsed {
             match instruction {
                 Instruction::Left(ticks) => {
-                    let times = ticks / 100;
-                    let remainder = ticks - (times * 100);
+                    let steps = ticks % names.len();
 
-                    result += times;
-
-                    if remainder > position {
-                        if position != 0 {
-                            result += 1;
-                        } else {
-                            // don't count this is a pass if we're already at 0
-                        }
-
-                        position = 100 - (remainder - position);
+                    if steps > result {
+                        let steps = steps - result;
+                        result = names.len() - steps;
                     } else {
-                        position -= remainder;
-                    }
-
-                    if position == 0 {
-                        // we ended up on zero, so add to password
-                        result += 1;
+                        result -= steps;
                     }
                 },
                 Instruction::Right(ticks) => {
-                    position += ticks;
+                    result += ticks;
 
-                    let times = position / 100;
-
-                    position %= 100;
-
-                    result += times;
+                    result %= names.len();
                 },
             }
         }
 
-        PartSolution::U32(result)
+        PartSolution::from(&*names[result])
+    }
+
+    fn part_3(&self, input: &str) -> PartSolution {
+        let (mut names, parsed) = parse_input(input);
+
+        for instruction in parsed {
+            match instruction {
+                Instruction::Left(mut ticks) => {
+                    ticks %= names.len();
+
+                    if ticks != 0 {
+                        let index = names.len() - ticks;
+
+                        names.swap(0, index);
+                    }
+                },
+                Instruction::Right(mut ticks) => {
+                    ticks %= names.len();
+
+                    if ticks != 0 {
+                        names.swap(0, ticks);
+                    }
+                },
+            }
+        }
+
+        PartSolution::from(&*names[0])
     }
 }
 
 #[cfg(test)]
 mod test {
+    use everybody_codes_2025::{test_example, test_solution};
 
-    mod part_1 {
-        use everybody_codes_2025::{test_example_part_1, test_part_1};
-        use pretty_assertions::assert_eq;
-
-        #[test]
-        fn outcome() {
-            test_part_1!(1031);
-        }
-
-        #[test]
-        fn example() {
-            test_example_part_1!(3);
-        }
+    #[test]
+    fn outcome_1() {
+        test_solution!(1, "Dalkryth");
     }
 
-    mod part_2 {
-        use everybody_codes_2025::{test_example_part_2, test_part_2};
-        use pretty_assertions::assert_eq;
+    #[test]
+    fn example_1() {
+        test_example!(1, "Fyrryn");
+    }
 
-        #[test]
-        fn outcome() {
-            test_part_2!(5831);
-        }
+    #[test]
+    fn outcome_2() {
+        test_solution!(2, "Mornfeth");
+    }
 
-        #[test]
-        fn example() {
-            test_example_part_2!(6);
-        }
+    #[test]
+    fn example_2() {
+        test_example!(2, "Elarzris");
+    }
+
+    #[test]
+    fn outcome_3() {
+        test_solution!(3, "Tharnlorath");
+    }
+
+    #[test]
+    fn example_3() {
+        test_example!(3, "Drakzyph");
     }
 }

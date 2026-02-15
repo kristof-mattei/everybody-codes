@@ -9,6 +9,7 @@ pub mod utils;
 pub trait Parts {
     fn part_1(&self, input: &str) -> PartSolution;
     fn part_2(&self, input: &str) -> PartSolution;
+    fn part_3(&self, input: &str) -> PartSolution;
 }
 
 pub enum PartSolution {
@@ -483,78 +484,40 @@ impl std::cmp::PartialOrd<PartSolution> for Vec<String> {
 
 #[macro_export]
 #[expect(clippy::crate_in_macro_def, reason = "We do want the parent one")]
-macro_rules! test_part_1 {
-    ($value:literal) => {{
-        use everybody_codes_2025::shared::Parts;
-        use everybody_codes_2025::shared::solution::read_file;
+macro_rules! test_solution {
+    ($part:literal, $value:expr) => {{
+        use everybody_codes_2025::shared::solution::read_file_part;
+        use everybody_codes_2025::shared::{PartSolution, Parts};
 
         use crate::{DAY, Solution};
 
         if std::env::var("CI").is_err() {
-            assert_eq!($value, (Solution {}).part_1(&read_file("inputs", &DAY)));
+            let result = paste::item! {
+                (Solution {}).[ < part_$part > ](&read_file_part("inputs", &DAY, $part))
+            };
+
+            let solution: PartSolution = PartSolution::from($value);
+
+            pretty_assertions::assert_eq!(solution, result);
         }
     }};
 }
 
 #[macro_export]
 #[expect(clippy::crate_in_macro_def, reason = "We do want the parent one")]
-macro_rules! test_part_2 {
-    ($value:literal) => {{
-        use everybody_codes_2025::shared::Parts;
-        use everybody_codes_2025::shared::solution::read_file;
-
-        use crate::{DAY, Solution};
-
-        if std::env::var("CI").is_err() {
-            assert_eq!($value, (Solution {}).part_2(&read_file("inputs", &DAY)));
-        }
-    }};
-}
-
-#[macro_export]
-#[expect(clippy::crate_in_macro_def, reason = "We do want the parent one")]
-macro_rules! test_example_part_1 {
-    ($value:literal, $part:literal) => {{
-        use everybody_codes_2025::shared::Parts;
+macro_rules! test_example {
+    ($part:literal, $value:expr) => {{
         use everybody_codes_2025::shared::solution::read_file_part;
+        use everybody_codes_2025::shared::{PartSolution, Parts};
 
         use crate::{DAY, Solution};
 
-        assert_eq!(
-            $value,
-            (Solution {}).part_1(&read_file_part("examples", &DAY, $part))
-        );
-    }};
-    ($value:literal) => {{
-        use everybody_codes_2025::shared::Parts;
-        use everybody_codes_2025::shared::solution::read_file;
+        let result = paste::item! {
+            (Solution {}).[ < part_$part > ](&read_file_part("examples", &DAY, $part))
+        };
 
-        use crate::{DAY, Solution};
+        let solution: PartSolution = PartSolution::from($value);
 
-        assert_eq!($value, (Solution {}).part_1(&read_file("examples", &DAY)));
-    }};
-}
-
-#[macro_export]
-#[expect(clippy::crate_in_macro_def, reason = "We do want the parent one")]
-macro_rules! test_example_part_2 {
-    ($value:literal, $part:literal) => {{
-        use everybody_codes_2025::shared::Parts;
-        use everybody_codes_2025::shared::solution::read_file_part;
-
-        use crate::{DAY, Solution};
-
-        assert_eq!(
-            $value,
-            (Solution {}).part_2(&read_file_part("examples", &DAY, $part))
-        );
-    }};
-    ($value:literal) => {{
-        use everybody_codes_2025::shared::Parts;
-        use everybody_codes_2025::shared::solution::read_file;
-
-        use crate::{DAY, Solution};
-
-        assert_eq!($value, (Solution {}).part_2(&read_file("examples", &DAY)));
+        pretty_assertions::assert_eq!(solution, result);
     }};
 }

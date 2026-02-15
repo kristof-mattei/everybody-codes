@@ -1,113 +1,170 @@
-#![expect(clippy::string_slice, reason = "We're in ASCII only world")]
+use std::ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign};
 
 use everybody_codes_2025::shared::{PartSolution, Parts};
 
-everybody_codes_2025::solution!(20_223_751_480_u64, 30_260_171_216_u64);
+everybody_codes_2025::solution!("[155819,797337]", 622, 60242);
 
-fn parse_ids(ids: &str) -> (u64, u64) {
-    let (id1, id2) = ids.split_once('-').unwrap();
+fn parse_input(input: &str) -> Complex {
+    let line = input.lines().next().unwrap();
 
-    (id1.parse().unwrap(), id2.parse().unwrap())
+    let (_, instructions) = line.split_once('=').unwrap();
+
+    let (left, right) = instructions
+        .strip_prefix('[')
+        .unwrap()
+        .strip_suffix(']')
+        .unwrap()
+        .split_once(',')
+        .unwrap();
+
+    Complex(left.parse().unwrap(), right.parse().unwrap())
 }
 
-fn parse_input(input: &str) -> Vec<(u64, u64)> {
-    input
-        .trim()
-        .split(',')
-        .map(parse_ids)
-        .collect::<Vec<(u64, u64)>>()
+#[derive(Copy, Clone)]
+struct Complex(i64, i64);
+
+impl Add for Complex {
+    type Output = Self;
+
+    fn add(self, rhs: Self) -> Self::Output {
+        Complex(self.0 + rhs.0, self.1 + rhs.1)
+    }
+}
+
+impl AddAssign for Complex {
+    fn add_assign(&mut self, rhs: Self) {
+        self.0 += rhs.0;
+        self.1 += rhs.1;
+    }
+}
+
+impl Mul for Complex {
+    type Output = Self;
+
+    fn mul(self, rhs: Self) -> Self::Output {
+        let Complex(x1, y1) = self;
+        let Complex(x2, y2) = rhs;
+
+        Complex(x1 * x2 - y1 * y2, x1 * y2 + y1 * x2)
+    }
+}
+
+impl MulAssign for Complex {
+    fn mul_assign(&mut self, rhs: Self) {
+        let y2 = rhs.1;
+        let y1 = self.1;
+        let x2 = rhs.0;
+        let x1 = self.0;
+
+        self.0 = x1 * x2 - y1 * y2;
+        self.1 = x1 * y2 + y1 * x2;
+    }
+}
+
+impl Div for Complex {
+    type Output = Self;
+
+    fn div(self, rhs: Self) -> Self::Output {
+        Complex(self.0 / rhs.0, self.1 / rhs.1)
+    }
+}
+
+impl DivAssign for Complex {
+    fn div_assign(&mut self, rhs: Self) {
+        self.0 /= rhs.0;
+        self.1 /= rhs.1;
+    }
+}
+
+fn paint(input: &str, step: usize) -> PartSolution {
+    let complex = parse_input(input);
+
+    let mut painted = 0;
+
+    for x in (complex.0..=(complex.0 + 1_000)).step_by(step) {
+        for y in (complex.1..=(complex.1 + 1_000)).step_by(step) {
+            let mut skip = false;
+            let mut result = Complex(0, 0);
+
+            for _ in 0..100 {
+                result *= result;
+                result /= Complex(100_000, 100_000);
+                result += Complex(x, y);
+
+                if result.0 > 1_000_000
+                    || result.1 > 1_000_000
+                    || result.0 < -1_000_000
+                    || result.1 < -1_000_000
+                {
+                    skip = true;
+                    break;
+                }
+            }
+
+            if !skip {
+                painted += 1;
+            }
+        }
+    }
+
+    painted.into()
 }
 
 impl Parts for Solution {
     fn part_1(&self, input: &str) -> PartSolution {
-        let parsed = parse_input(input);
+        let complex = parse_input(input);
 
-        let mut count = 0;
+        let mut result = Complex(0, 0);
 
-        for (start, stop) in parsed {
-            for value in start..=stop {
-                let value_s = value.to_string();
-
-                if value_s.len() % 2 == 0 {
-                    if value_s[0..value_s.len() / 2] == value_s[value_s.len() / 2..] {
-                        count += value;
-                    }
-                }
-            }
+        for _ in 0..3 {
+            result *= result;
+            result /= Complex(10, 10);
+            result += complex;
         }
 
-        PartSolution::U64(count)
+        PartSolution::String(format!("[{},{}]", result.0, result.1))
     }
 
     fn part_2(&self, input: &str) -> PartSolution {
-        let parsed = parse_input(input);
+        paint(input, 10)
+    }
 
-        let mut count = 0;
-
-        for (start, stop) in parsed {
-            for value in start..=stop {
-                let value_s: Vec<_> = value.to_string().chars().collect();
-
-                for i in 1..=(value_s.len() / 2) {
-                    if value_s.len() % i == 0 {
-                        let mut valid = true;
-
-                        let chunks: Vec<_> = value_s.chunks(i).collect();
-
-                        for w in chunks.windows(2) {
-                            let w0 = w[0];
-                            let w1 = w[1];
-
-                            if w0 != w1 {
-                                valid = false;
-                                break;
-                            }
-                        }
-
-                        if valid {
-                            count += value;
-                            // ensure we don't count values like `222222` multiple times (1, 2 & 3)
-                            break;
-                        }
-                    }
-                }
-            }
-        }
-
-        PartSolution::U64(count)
+    fn part_3(&self, input: &str) -> PartSolution {
+        paint(input, 1)
     }
 }
 
 #[cfg(test)]
 mod test {
+    use everybody_codes_2025::{test_example, test_solution};
 
-    mod part_1 {
-        use everybody_codes_2025::{test_example_part_1, test_part_1};
-        use pretty_assertions::assert_eq;
-
-        #[test]
-        fn outcome() {
-            test_part_1!(20_223_751_480_u64);
-        }
-
-        #[test]
-        fn example() {
-            test_example_part_1!(1_227_775_554);
-        }
+    #[test]
+    fn outcome_1() {
+        test_solution!(1, "[155819,797337]");
     }
 
-    mod part_2 {
-        use everybody_codes_2025::{test_example_part_2, test_part_2};
-        use pretty_assertions::assert_eq;
+    #[test]
+    fn example_1() {
+        test_example!(1, "[357,862]");
+    }
 
-        #[test]
-        fn outcome() {
-            test_part_2!(30_260_171_216_u64);
-        }
+    #[test]
+    fn outcome_2() {
+        test_solution!(2, 622);
+    }
 
-        #[test]
-        fn example() {
-            test_example_part_2!(4_174_379_265_u64);
-        }
+    #[test]
+    fn example_2() {
+        test_example!(2, 4076);
+    }
+
+    #[test]
+    fn outcome_3() {
+        test_solution!(3, 60242);
+    }
+
+    #[test]
+    fn example_3() {
+        test_example!(3, 406_954);
     }
 }

@@ -21,9 +21,8 @@ hashbrown = { version = "0.16.1", default-features = false, features = [
     "equivalent",
     "inline-more",
 ] }
+paste = "1.0.15"
 pretty_assertions = "1.4.1"
-z3 = "0.19.6"
-#regex = { version = "1.11.3", features = ["perf", "unicode-perl", "std"] }
 
 [dev-dependencies]
 

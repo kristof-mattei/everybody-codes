@@ -8,8 +8,9 @@ fn read_file_base(filepath: impl AsRef<Path>) -> String {
 
     f.unwrap_or_else(|error| {
         panic!(
-            "Error reading file \"{}\": {error:?}",
-            filepath.as_ref().to_str().unwrap()
+            "Error reading file \"{}\": {:?}",
+            filepath.as_ref().to_str().unwrap(),
+            error
         )
     })
 }
@@ -49,9 +50,12 @@ macro_rules! solution {
         $crate::solution!(PartSolution::None, PartSolution::None);
     };
     ($solution_1:expr) => {
-        $crate::solution!($solution_1, PartSolution::None);
+        $crate::solution!($solution_1, PartSolution::None, PartSolution::None);
     };
     ($solution_1:expr, $solution_2:expr) => {
+        $crate::solution!($solution_1, $solution_2, PartSolution::None);
+    };
+    ($solution_1:expr, $solution_2:expr,  $solution_3:expr) => {
         /// The current day.
         static DAY: std::sync::LazyLock<$crate::shared::day::Day> =
             std::sync::LazyLock::new(|| {
@@ -69,20 +73,27 @@ macro_rules! solution {
 
         #[expect(clippy::disallowed_macros, reason = "No pretty needed here")]
         fn main() {
-            // use everybody_codes_2025::template::runner::*;
-            let input = $crate::shared::solution::read_file("inputs", &DAY);
-
-            let part_1_expected_solution: PartSolution = PartSolution::from($solution_1);
-
             let s = Solution {};
 
-            assert_eq!(part_1_expected_solution, s.part_1(&input));
+            let inputs = concat!(env!("CARGO_MANIFEST_DIR"), "/data/inputs");
 
-            let part_2_expected_solution: PartSolution = PartSolution::from($solution_2);
+            {
+                let input1 = $crate::shared::solution::read_file_part(inputs, &DAY, 1);
+                let part_1_expected_solution: PartSolution = PartSolution::from($solution_1);
+                assert_eq!(part_1_expected_solution, s.part_1(&input1));
+            }
 
-            assert_eq!(part_2_expected_solution, s.part_2(&input));
-            // run_part(part_one, &input, &DAY, 1);
-            // run_part(part_two, &input, &DAY, 2);
+            {
+                let input2 = $crate::shared::solution::read_file_part(inputs, &DAY, 2);
+                let part_2_expected_solution: PartSolution = PartSolution::from($solution_2);
+                assert_eq!(part_2_expected_solution, s.part_2(&input2));
+            }
+
+            {
+                let input3 = $crate::shared::solution::read_file_part(inputs, &DAY, 3);
+                let part_3_expected_solution: PartSolution = PartSolution::from($solution_3);
+                assert_eq!(part_3_expected_solution, s.part_3(&input3));
+            }
         }
 
         pub struct Solution {}
