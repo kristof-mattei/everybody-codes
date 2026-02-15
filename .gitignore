@@ -10,3 +10,4 @@ profiling/
 /profile.json
 
 /data/inputs
+crates/**/data/inputs/*.txt

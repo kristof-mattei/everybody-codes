@@ -4,61 +4,49 @@ everybody_codes_2025::solution!();
 
 impl Parts for Solution {
     fn part_1(&self, _input: &str) -> PartSolution {
-        None.into()
+        PartSolution::None
     }
 
     fn part_2(&self, _input: &str) -> PartSolution {
-        None.into()
+        PartSolution::None
+    }
+
+    fn part_3(&self, _input: &str) -> PartSolution {
+        PartSolution::None
     }
 }
 
 #[cfg(test)]
 mod test {
-    mod part_1 {
-        use everybody_codes_2025::shared::solution::read_file;
-        use everybody_codes_2025::shared::{PartSolution, Parts as _};
-        use pretty_assertions::assert_eq;
+    use everybody_codes_2025::{test_example, test_solution};
 
-        use crate::{DAY, Solution};
-
-        #[test]
-        fn outcome() {
-            assert_eq!(
-                PartSolution::None,
-                (Solution {}).part_1(&read_file("inputs", &DAY))
-            );
-        }
-
-        #[test]
-        fn example() {
-            assert_eq!(
-                PartSolution::None,
-                (Solution {}).part_1(&read_file("examples", &DAY))
-            );
-        }
+    #[test]
+    fn outcome_1() {
+        test_solution!(1, PartSolution::None);
     }
 
-    mod part_2 {
-        use everybody_codes_2025::shared::solution::read_file;
-        use everybody_codes_2025::shared::{PartSolution, Parts as _};
-        use pretty_assertions::assert_eq;
+    #[test]
+    fn example_1() {
+        test_example!(1, PartSolution::None);
+    }
 
-        use crate::{DAY, Solution};
+    #[test]
+    fn outcome_2() {
+        test_solution!(2, PartSolution::None);
+    }
 
-        #[test]
-        fn outcome() {
-            assert_eq!(
-                PartSolution::None,
-                (Solution {}).part_2(&read_file("inputs", &DAY))
-            );
-        }
+    #[test]
+    fn example_2() {
+        test_example!(2, PartSolution::None);
+    }
 
-        #[test]
-        fn example() {
-            assert_eq!(
-                PartSolution::None,
-                (Solution {}).part_2(&read_file("examples", &DAY))
-            );
-        }
+    #[test]
+    fn outcome_3() {
+        test_solution!(3, PartSolution::None);
+    }
+
+    #[test]
+    fn example_3() {
+        test_example!(3, PartSolution::None);
     }
 }
