@@ -1,6 +1,6 @@
-use everybody_codes_2025::shared::{PartSolution, Parts};
+use shared::{PartSolution, Parts};
 
-everybody_codes_2025::solution!("Dalkryth", "Mornfeth", "Tharnlorath");
+shared::solution!("Dalkryth", "Mornfeth", "Tharnlorath");
 
 #[derive(Debug)]
 enum Instruction {
@@ -133,7 +133,7 @@ impl Parts for Solution {
 
 #[cfg(test)]
 mod test {
-    use everybody_codes_2025::{test_example, test_solution};
+    use shared::{test_example, test_solution};
 
     #[test]
     fn outcome_1() {

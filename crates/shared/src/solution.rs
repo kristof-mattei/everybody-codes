@@ -57,19 +57,18 @@ macro_rules! solution {
     };
     ($solution_1:expr, $solution_2:expr,  $solution_3:expr) => {
         /// The current quest.
-        static QUEST: std::sync::LazyLock<$crate::shared::quest::Quest> =
-            std::sync::LazyLock::new(|| {
-                use std::path::Path;
+        static QUEST: std::sync::LazyLock<$crate::quest::Quest> = std::sync::LazyLock::new(|| {
+            use std::path::Path;
 
-                let path = Path::new(file!());
-                let file_stem = path
-                    .file_stem()
-                    .expect("No stem found")
-                    .to_str()
-                    .expect("Invalid str");
+            let path = Path::new(file!());
+            let file_stem = path
+                .file_stem()
+                .expect("No stem found")
+                .to_str()
+                .expect("Invalid str");
 
-                std::str::FromStr::from_str(file_stem).expect("Could not convert input to Quest")
-            });
+            std::str::FromStr::from_str(file_stem).expect("Could not convert input to Quest")
+        });
 
         #[expect(clippy::disallowed_macros, reason = "No pretty needed here")]
         fn main() {
@@ -78,19 +77,19 @@ macro_rules! solution {
             let inputs = concat!(env!("CARGO_MANIFEST_DIR"), "/data/inputs");
 
             {
-                let input1 = $crate::shared::solution::read_file_part(inputs, &QUEST, 1);
+                let input1 = $crate::solution::read_file_part(inputs, &QUEST, 1);
                 let part_1_expected_solution: PartSolution = PartSolution::from($solution_1);
                 assert_eq!(part_1_expected_solution, s.part_1(&input1));
             }
 
             {
-                let input2 = $crate::shared::solution::read_file_part(inputs, &QUEST, 2);
+                let input2 = $crate::solution::read_file_part(inputs, &QUEST, 2);
                 let part_2_expected_solution: PartSolution = PartSolution::from($solution_2);
                 assert_eq!(part_2_expected_solution, s.part_2(&input2));
             }
 
             {
-                let input3 = $crate::shared::solution::read_file_part(inputs, &QUEST, 3);
+                let input3 = $crate::solution::read_file_part(inputs, &QUEST, 3);
                 let part_3_expected_solution: PartSolution = PartSolution::from($solution_3);
                 assert_eq!(part_3_expected_solution, s.part_3(&input3));
             }

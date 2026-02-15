@@ -15,14 +15,8 @@ include.workspace = true
 default = []
 
 [dependencies]
-color-eyre = "0.6.5"
-hashbrown = { version = "0.16.1", default-features = false, features = [
-    "default-hasher",
-    "equivalent",
-    "inline-more",
-] }
-paste = "1.0.15"
 pretty_assertions = "1.4.1"
+shared = { path = "../shared" }
 
 [dev-dependencies]
 

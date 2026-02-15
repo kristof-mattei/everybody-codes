@@ -8,7 +8,7 @@ use std::str::FromStr;
 /// This value displays as a two digit number.
 ///
 /// ```
-/// # use everybody_codes_2025::shared::quest::Quest;
+/// # use shared::quest::Quest;
 /// const QUEST: Quest = Quest::try_new(8).unwrap();
 /// assert_eq!(QUEST.to_string(), "08")
 /// ```
@@ -85,7 +85,7 @@ impl Display for QuestFromStrError {
 #[macro_export]
 macro_rules! quest {
     ($quest:literal) => {{
-        $crate::shared::quest::Quest::try_new($quest).expect(concat!(
+        $crate::quest::Quest::try_new($quest).expect(concat!(
             "invalid quest number `",
             $quest,
             "`, expecting a value between 1 and 25"

@@ -279,7 +279,7 @@ mod tests {
     use pretty_assertions::assert_eq;
 
     use super::Grid;
-    use crate::shared::grids::{
+    use crate::grids::{
         GridIter as _, HorizontalVerticalDiagonalDirection, HorizontalVerticalDirection,
         Neighbors as _,
     };

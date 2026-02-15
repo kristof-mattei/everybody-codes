@@ -256,8 +256,8 @@ impl<T> Index<isize> for InfiniteGrid<T> {
 mod tests {
     use pretty_assertions::assert_eq;
 
-    use crate::shared::grids::infinite_grid::InfiniteGrid;
-    use crate::shared::grids::{
+    use crate::grids::infinite_grid::InfiniteGrid;
+    use crate::grids::{
         HorizontalVerticalDiagonalDirection, HorizontalVerticalDirection, Neighbors as _,
     };
 

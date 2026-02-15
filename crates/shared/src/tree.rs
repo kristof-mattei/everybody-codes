@@ -111,8 +111,8 @@ impl Side {
 /// # Examples
 ///
 /// ```
-/// use everybody_codes_2025::shared::tree::to_bt;
-/// use everybody_codes_2025::shared::tree::tn;
+/// use shared::tree::to_bt;
+/// use shared::tree::tn;
 ///
 /// let input = [1.into(), None, 3.into()];
 /// assert_eq!(to_bt(&input), tn(1, None, tn(3, None, None).into()).into());
@@ -165,8 +165,8 @@ pub fn to_bt<T: Copy>(input: &[Option<T>]) -> Option<Rc<RefCell<Node<T>>>> {
 /// # Examples
 ///
 /// ```
-/// use everybody_codes_2025::shared::tree::from_bt;
-/// use everybody_codes_2025::shared::tree::tn;
+/// use shared::tree::from_bt;
+/// use shared::tree::tn;
 ///
 /// let input = tn(1, None, tn(3, None, None).into()).into();
 /// assert_eq!(from_bt(input), [1.into(), None, 3.into()]);
@@ -215,7 +215,7 @@ pub fn tn<T>(
 mod tests {
     use pretty_assertions::assert_eq;
 
-    use crate::shared::tree::{NodeIterator, tn, to_bt};
+    use crate::tree::{NodeIterator, tn, to_bt};
 
     #[test]
     fn bt() {
