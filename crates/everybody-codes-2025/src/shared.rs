@@ -1,7 +1,7 @@
 use std::cmp::Ordering;
 
-pub mod day;
 pub mod grids;
+pub mod quest;
 pub mod solution;
 pub mod tree;
 pub mod utils;
@@ -489,11 +489,11 @@ macro_rules! test_solution {
         use everybody_codes_2025::shared::solution::read_file_part;
         use everybody_codes_2025::shared::{PartSolution, Parts};
 
-        use crate::{DAY, Solution};
+        use crate::{QUEST, Solution};
 
         if std::env::var("CI").is_err() {
             let result = paste::item! {
-                (Solution {}).[ < part_$part > ](&read_file_part("inputs", &DAY, $part))
+                (Solution {}).[ < part_$part > ](&read_file_part("inputs", &QUEST, $part))
             };
 
             let solution: PartSolution = PartSolution::from($value);
@@ -510,10 +510,10 @@ macro_rules! test_example {
         use everybody_codes_2025::shared::solution::read_file_part;
         use everybody_codes_2025::shared::{PartSolution, Parts};
 
-        use crate::{DAY, Solution};
+        use crate::{QUEST, Solution};
 
         let result = paste::item! {
-            (Solution {}).[ < part_$part > ](&read_file_part("examples", &DAY, $part))
+            (Solution {}).[ < part_$part > ](&read_file_part("examples", &QUEST, $part))
         };
 
         let solution: PartSolution = PartSolution::from($value);
