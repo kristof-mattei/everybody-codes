@@ -522,4 +522,18 @@ macro_rules! test_example {
 
         pretty_assertions::assert_eq!(solution, result);
     }};
+    ($part:literal, $part_2:literal, $value:expr) => {{
+        use shared::solution::read_file_part_part;
+        use shared::{PartSolution, Parts};
+
+        use crate::{QUEST, Solution};
+
+        let result = $crate::pastey::item! {
+            (Solution {}).[ < part_$part > ](&read_file_part_part("examples", &QUEST, $part, $part_2))
+        };
+
+        let solution: PartSolution = PartSolution::from($value);
+
+        pretty_assertions::assert_eq!(solution, result);
+    }};
 }
