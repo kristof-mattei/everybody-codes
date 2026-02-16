@@ -44,6 +44,22 @@ pub fn read_file_part(folder: &str, quest: &Quest, part: u8) -> String {
     read_file_base(filepath)
 }
 
+/// Helper function that reads a text file to string, appending a part suffix. E.g. like `01-2-3.txt`.
+///
+/// # Panics
+///
+/// if the file does not exist or cannot be read.
+#[must_use]
+pub fn read_file_part_part(folder: &str, quest: &Quest, part: u8, part_2: u8) -> String {
+    let cwd = env::current_dir().unwrap();
+    let filepath = cwd
+        .join("data")
+        .join(folder)
+        .join(format!("{}-{}-{}.txt", quest, part, part_2));
+
+    read_file_base(filepath)
+}
+
 #[macro_export]
 macro_rules! solution {
     () => {
