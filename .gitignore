@@ -1,0 +1,13 @@
+# only in root
+/node_modules
+/reports
+/target
+
+# emitted per-crate
+profiling/
+
+# samply output
+/profile.json
+
+/data/inputs
+crates/**/data/inputs/*.txt

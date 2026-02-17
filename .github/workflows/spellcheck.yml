@@ -1,0 +1,130 @@
+# yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
+name: Spellcheck
+
+on:
+  pull_request:
+    branches:
+      - main
+
+concurrency:
+  # each new commit to a PR runs this workflow
+  # so we need to avoid a long running older one from overwriting the "pr-<number>-latest"
+  group: "${{ github.workflow }} @ ${{ github.ref_name }}"
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  spellcheck:
+    name: Spellcheck
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          show-progress: false
+
+      - name: Make sure dictionary words are sorted and unique
+        run: |
+          FILE="spellcheck.dic"
+
+          # Verify the first line is an integer.
+          first_line=$(head -n 1 "$FILE")
+          if ! [[ "$first_line" =~ ^[0-9]+$ ]]; then
+            echo "Error: The first line of $FILE must be an integer, but got: '$first_line'"
+            exit 1
+          fi
+          expected_count="$first_line"
+
+          # Check that the number of lines matches the integer.
+          # xargs (with no arguments) will strip leading/trailing whitespace from wc's output.
+          actual_count=$(sed '1d' "$FILE" | wc -l | xargs)
+          if [ "$expected_count" -ne "$actual_count" ]; then
+            echo "Error: The number of lines ($actual_count) does not match $expected_count."
+            exit 1
+          fi
+
+          # `sed` removes the first line (number of words).
+          #
+          # `sort` makes sure everything in between is sorted
+          # and contains no duplicates.
+          #
+          # Since `sort` is sensitive to locale, we set it
+          # using LC_ALL to en_US.UTF8 to be consistent in different
+          # environments.
+
+          (
+            sed '1d' "$FILE" | LC_ALL=en_US.UTF8 sort -uc
+          ) || {
+            echo "Dictionary is not in sorted order. Correct order is:"
+            LC_ALL=en_US.UTF8 sort -u <(sed '1d' "$FILE")
+            false
+          }
+
+      - name: Detect trailing whitespace
+        run: |
+          if grep --exclude-dir=.git --exclude-dir=node_modules --exclude-dir=target --binary-files=without-match --recursive --line-number --regexp='\s$' .
+          then
+              echo ''
+              echo 'Please remove trailing whitespace from these lines.'
+              exit 1
+          fi
+
+      - name: Cache cargo
+        uses: actions/cache@cdf6c1fa76f9f475f3d7449005a359c84ca0f306 # v5.0.3
+        env:
+          CACHE_NAME: cargo
+        with:
+          path: |
+            ~/.cargo/.crates.toml
+            ~/.cargo/.crates2.json
+            ~/.cargo/bin/
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+            ~/.cargo/git/db/
+          key: ${{ runner.os }}-${{ runner.arch }}-build-${{ env.CACHE_NAME }}-${{ hashFiles('Cargo.lock') }}-${{ github.workflow }}-${{ github.job }}
+          restore-keys: |
+            ${{ runner.os }}-${{ runner.arch }}-build-${{ env.CACHE_NAME }}-${{ hashFiles('Cargo.lock') }}-${{ github.workflow }}-
+            ${{ runner.os }}-${{ runner.arch }}-build-${{ env.CACHE_NAME }}-${{ hashFiles('Cargo.lock') }}-
+            ${{ runner.os }}-${{ runner.arch }}-build-${{ env.CACHE_NAME }}-
+
+      - name: Set up mold
+        uses: rui314/setup-mold@725a8794d15fc7563f59595bd9556495c0564878 # v1
+
+      - name: Set up toolchain
+        shell: bash
+        run: |
+          rm ${HOME}/.cargo/bin/cargo-fmt
+          rm ${HOME}/.cargo/bin/rust-analyzer
+          rm ${HOME}/.cargo/bin/rustfmt
+
+          rustup self update
+          rustup update
+          rustup show active-toolchain || rustup toolchain install
+          rustup show
+
+          cargo --version
+
+      - name: Install libclang-dev should cargo-spellcheck be built from source
+        shell: bash
+        run: |
+          sudo apt-get install --no-install-recommends --yes libclang-dev
+
+      - name: Install cargo-spellcheck to check the spelling
+        uses: taiki-e/install-action@f8d25fb8a2df08dcd3cead89780d572767b8655f # v2.68.0
+        with:
+          tool: cargo-spellcheck@0.15.5
+
+      - name: Run cargo-spellcheck
+        run: |
+          if ! cargo spellcheck --code 1
+          then
+              echo ''
+              echo ''
+              echo 'If this is a Rust method/type/variable name, then you should'
+              echo 'enclose it in backticks like this: `MyRustType`.'
+              echo ''
+              echo 'If this is a real word, then you can add it to spellcheck.dic'
+              exit 1
+          fi

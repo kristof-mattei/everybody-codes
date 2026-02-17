@@ -1,0 +1,13 @@
+shared: &shared
+  - ".github/**"
+  - ".nvmrc"
+  - "build-scripts/**"
+docker:
+  - *shared
+  - Dockerfile
+rust:
+  - *shared
+  - "**/*.toml"
+  - ".cargo/**"
+  - "crates/**"
+  - Cargo.lock
