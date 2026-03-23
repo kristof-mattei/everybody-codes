@@ -9,5 +9,7 @@ profiling/
 # samply output
 /profile.json
 
-/data/inputs
-crates/**/data/inputs/*.txt
+.env
+
+# data
+/crates/**/data/inputs/*.txt
