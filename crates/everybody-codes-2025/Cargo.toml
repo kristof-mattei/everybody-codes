@@ -15,10 +15,10 @@ include.workspace = true
 default = []
 
 [dependencies]
-pretty_assertions = "1.4.1"
 shared = { path = "../shared" }
 
 [dev-dependencies]
+pretty_assertions = "=1.4.1"
 
 [lints]
 workspace = true
