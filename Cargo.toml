@@ -7,10 +7,10 @@ version = "0.0.0-development"
 edition = "2024"
 rust-version = "1.95.0"
 authors = ["Kristof Mattei"]
-description = "Advent of Code 2025"
+description = "Everybody Codes"
 license = "MIT"
-categories = ["starter", "seed"]
-keywords = ["integrity", "seed", "starter", "docker", "release"]
+categories = ["playground"]
+keywords = ["playground"]
 repository = "https://github.com/kristof-mattei/everybody-codes"
 include = ["crates/**", "/LICENSE", "/LICENSE-*"]
 
@@ -38,7 +38,7 @@ allow_attributes_without_reason = { level = "deny", priority = 127 }
 # arbitrary_source_item_ordering = { level = "deny", priority = 127 }
 # Debatable
 # arithmetic_side_effects = { level = "deny", priority = 127 }
-# Debatable, the ones below deny more specific occurences
+# No point in this kind of codebase
 # as_conversions = { level = "deny", priority = 127 }
 as_pointer_underscore = { level = "deny", priority = 127 }
 as_underscore = { level = "deny", priority = 127 }
@@ -198,8 +198,7 @@ unimplemented = { level = "deny", priority = 127 }
 unnecessary_safety_comment = { level = "deny", priority = 127 }
 unnecessary_safety_doc = { level = "deny", priority = 127 }
 unnecessary_self_imports = { level = "deny", priority = 127 }
-
-# unneeded_field_pattern = { level = "deny", priority = 127 }
+unneeded_field_pattern = { level = "deny", priority = 127 }
 # No, this is information for the reader and compiler
 # unreachable = { level = "deny", priority = 127 }
 unseparated_literal_suffix = { level = "deny", priority = 127 }
