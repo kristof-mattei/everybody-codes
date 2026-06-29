@@ -15,8 +15,8 @@ include.workspace = true
 default = []
 
 [dependencies]
-pastey = "0.2.3"
-pretty_assertions = "1.4.1"
+pastey = "=0.2.3"
+pretty_assertions = "=1.4.1"
 
 [dev-dependencies]
 
