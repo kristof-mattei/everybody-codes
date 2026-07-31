@@ -35,7 +35,6 @@ nextest
 nvmrc
 pastey
 pathbuf
-pids
 postprocessors
 prereleased
 profraw
