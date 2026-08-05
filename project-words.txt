@@ -7,9 +7,10 @@ bkeepers
 buildcache
 Cabcabc
 Cbca
-Cinstrument
+cinstrument
 cocogitto
-Ctarget
+ctarget
+cttc
 cves
 Dalkryth
 Deque
@@ -27,6 +28,7 @@ ilog
 kristof
 lldb
 mattei
+mimalloc
 monomorphization
 Mornfeth
 multiplatform
@@ -38,8 +40,9 @@ pathbuf
 postprocessors
 prereleased
 profraw
-Retag
-Retagging
+pyflakes
+retag
+retagging
 rustflags
 samply
 sccache
@@ -48,9 +51,9 @@ startswith
 striptags
 swellaby
 taiki
-TARGETPLATFORMDASH
+targetplatformdash
 telem
-Tera
+tera
 Tharnlorath
 topo
 trixie
